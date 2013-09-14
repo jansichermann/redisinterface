@@ -89,15 +89,11 @@ func DeleteHashField(redisClient *redis.Client, hashKey string, key string) erro
 	return reply.Err
 }
 
-func UniqueIdForObjectType(redisClient *redis.Client, objectType string) int64 {
+func UniqueIdForObjectType(redisClient *redis.Client, objectType string) (int64, error) {
 	var s []string = []string{"uniqueid", redisDividerChar, objectType};
 	incrementKey := strings.Join(s, "");
 	reply := redisClient.Cmd("INCR", incrementKey);
-	i, e := reply.Int64()
-	if (e != nil) {
-		panic(e)
-	}
-	return i
+	return reply.Int64()
 }
 
 func IncrementRedisValue(redisClient *redis.Client, key string) {
